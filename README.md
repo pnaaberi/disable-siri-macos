@@ -6,7 +6,15 @@ The scripts do not use `sudo`, delete Apple files, disable System Integrity Prot
 
 ## Compatibility
 
-These commands were verified on a **15-inch 2017 MacBook Pro** (`MacBookPro14,3`) with a quad-core Intel Core i7 and Touch Bar, running macOS Ventura 13.7.8. No serial number or other unique machine identifier is published. Apple may rename preferences or change their behavior in later macOS releases. Review [AUDIT.md](AUDIT.md) before using this on another version.
+### Who this is for
+
+- **Siri disabling:** Macs running macOS. The preference keys are version-dependent, so check the tested version below.
+- **Touch Bar button removal:** **MacBook Pro computers with a physical Touch Bar only.** It does not apply to MacBook Air, iMac, Mac mini, Mac Studio, Mac Pro, or MacBook Pro models with physical function keys instead of a Touch Bar.
+- Having a MacBook Pro is not enough by itself: Apple sold models both with and without Touch Bar. Check for the narrow touch-sensitive display above the number keys.
+
+The Touch Bar portion was verified on a **15-inch 2017 MacBook Pro** (`MacBookPro14,3`) with a quad-core Intel Core i7 and Touch Bar, running macOS Ventura 13.7.8. This is the tested configuration, not a claim that every Touch Bar model or macOS release behaves identically. No serial number or other unique machine identifier is published.
+
+Apple may rename preferences or change their behavior in later macOS releases. Review [AUDIT.md](AUDIT.md) before using this on another version. On a Mac without Touch Bar, use `./scripts/disable-siri.sh --no-touch-bar`.
 
 ## Quick start
 
@@ -49,11 +57,13 @@ Remove only the Siri Touch Bar button:
 Treat this as an explicit user-setting change:
 
 1. Confirm the host is macOS and identify its version with `sw_vers`.
-2. Explain that “permanent” cannot be guaranteed across major macOS updates.
-3. Run as the signed-in desktop user, without `sudo`.
-4. Do not kill or delete protected system components. A root-owned `siriinferenced` process may remain; its presence does not mean the Siri assistant is enabled.
-5. Verify preference values and `launchctl print-disabled gui/$(id -u)` after execution.
-6. Offer `restore-siri.sh` as the rollback path.
+2. Before applying Touch Bar settings, confirm the computer has a physical Touch Bar; do not infer this merely from “MacBook Pro.”
+3. On a Mac without Touch Bar, pass `--no-touch-bar`.
+4. Explain that “permanent” cannot be guaranteed across major macOS updates.
+5. Run as the signed-in desktop user, without `sudo`.
+6. Do not kill or delete protected system components. A root-owned `siriinferenced` process may remain; its presence does not mean the Siri assistant is enabled.
+7. Verify preference values and `launchctl print-disabled gui/$(id -u)` after execution.
+8. Offer `restore-siri.sh` as the rollback path.
 
 ## Security
 

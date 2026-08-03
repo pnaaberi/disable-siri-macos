@@ -13,6 +13,8 @@ The scripts intentionally avoid:
 
 ## Changes made
 
+The Siri preference changes target macOS generally. The two `com.apple.controlstrip` changes apply only to MacBook Pro computers equipped with a physical Touch Bar. They have no useful effect on computers without that hardware and should be skipped there with `--no-touch-bar`.
+
 | Domain or service | Key/action | Intended effect |
 | --- | --- | --- |
 | `com.apple.assistant.support` | `Assistant Enabled = false` | Turns off the Siri assistant for the user |
@@ -38,7 +40,7 @@ A root-owned process named `siriinferenced` can remain active. It is a protected
 
 Preference and launch-service settings normally survive logout and restart. No project can honestly promise that unsupported preference keys will survive every macOS upgrade. Apple may migrate or reset them, and managed-device policy may override user settings.
 
-This project was manually verified on a 15-inch 2017 MacBook Pro (`MacBookPro14,3`) with a quad-core Intel Core i7 and Touch Bar, running macOS 13.7.8. The model identifier is a product-family identifier, not a unique device identifier. Touch Bar changes are relevant only to Macs that have a Touch Bar.
+This project was manually verified on a 15-inch 2017 MacBook Pro (`MacBookPro14,3`) with a quad-core Intel Core i7 and Touch Bar, running macOS 13.7.8. The model identifier is a product-family identifier, not a unique device identifier. This tested configuration must not be generalized to every macOS release without verification. Touch Bar changes are relevant only to MacBook Pro computers that physically have a Touch Bar; some MacBook Pro models use physical function keys and are out of scope for that part.
 
 ## Verification
 
