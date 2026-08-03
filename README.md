@@ -16,6 +16,47 @@ The Touch Bar portion was verified on a **15-inch 2017 MacBook Pro** (`MacBookPr
 
 Apple may rename preferences or change their behavior in later macOS releases. Review [AUDIT.md](AUDIT.md) before using this on another version. The commands print a warning when the macOS version differs from the tested version. The script makes no Touch Bar changes unless `--touch-bar` is passed.
 
+## Manual method—no scripts
+
+The supported, lowest-risk approach is to use System Settings. Names vary slightly by macOS version.
+
+### 1. Turn Siri off
+
+1. Open **Apple menu > System Settings**.
+2. Open **Siri & Spotlight**. On newer macOS versions this may be named **Apple Intelligence & Siri** or simply **Siri**.
+3. Set **Listen for “Hey Siri”** (or **Listen for**) to **Off**, if shown.
+4. Turn off **Allow Siri when locked**, if shown.
+5. Turn off **Ask Siri** or **Siri**, then confirm.
+6. To remove the separate menu-bar icon on macOS Ventura, open **Control Center** in System Settings, find **Siri**, and choose **Don't Show in Menu Bar**. On versions with a **Menu Bar** settings page, remove Siri there instead. System Settings search can locate “Siri menu bar” if the label has moved.
+7. Optional: open **Siri Suggestions & Privacy**, select each app, and turn off its suggestion and learning options. Apple exposes these per app. To stop suggestion-related location use, open **Privacy & Security > Location Services > System Services > Details**, then turn off **Suggestions & Search**.
+
+Apple's reference: [Siri settings on Mac](https://support.apple.com/guide/mac-help/siri-settings-on-mac-mchl3fd7fc15/mac).
+
+### 2. Remove Siri from the Touch Bar
+
+This section applies only to a MacBook Pro with a physical Touch Bar.
+
+1. Open **Apple menu > System Settings > Keyboard**.
+2. Click **Touch Bar Settings**. You may need to scroll down.
+3. Click **Customize Control Strip**.
+4. While the compact Control Strip is shown, use the trackpad or mouse to drag the **Siri** button upward from the Touch Bar onto the screen. This removes it.
+5. Tap the **Expand** button (`<`) in the Touch Bar to display the full Control Strip.
+6. If Siri is also present there, drag it from the Touch Bar onto the screen as well.
+7. Click **Done** on screen or tap **Done** in the Touch Bar.
+
+Dragging is unusual here: move the pointer down past the bottom edge of the display to enter the Touch Bar, then drag the Touch Bar button back upward onto the display. Apple's reference: [Customize the Touch Bar on Mac](https://support.apple.com/guide/mac-help/customize-the-touch-bar-mchl5a63b060/mac).
+
+### 3. Verify persistence
+
+1. Restart the Mac.
+2. Confirm Siri remains off in Siri settings.
+3. Check both the compact and expanded Control Strip; neither should contain Siri.
+4. If Siri returns after a major macOS upgrade, repeat the manual steps. macOS does not provide a “never allow Siri again” guarantee for unmanaged personal Macs.
+
+### Undo the manual method
+
+Turn Siri back on in Siri settings. To restore the Touch Bar button, return to **Keyboard > Touch Bar Settings > Customize Control Strip**, find Siri in the on-screen button palette, and drag it down into the desired compact or expanded Control Strip position.
+
 ## Quick start
 
 Open Terminal and run:
