@@ -77,7 +77,7 @@ Log out and back in if a System Settings screen does not immediately reflect the
 ./scripts/restore-siri.sh
 ```
 
-This restores each affected preference, both Touch Bar arrays, and the Siri launch-agent override to the values captured before the first change. If a preference did not previously exist, it is deleted. The used snapshot is then archived rather than deleted.
+This restores each affected preference, both Touch Bar arrays, and the Siri launch-agent override to the values captured before the first change. If a preference did not previously exist, it is deleted. If the Touch Bar preference domain did not exist before the first change, the Touch Bar arrays the script created are deleted, and the domain is removed when nothing else has been stored in it since. The used snapshot is then archived rather than deleted.
 
 ## Run only one part
 

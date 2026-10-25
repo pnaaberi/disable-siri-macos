@@ -100,6 +100,9 @@ dsm_ensure_backup() {
       "$(/usr/bin/defaults read com.apple.controlstrip MiniCustomized >/dev/null 2>&1 && print true || print false)"
     /usr/bin/defaults write "$metadata" fullCustomizedPresent -bool \
       "$(/usr/bin/defaults read com.apple.controlstrip FullCustomized >/dev/null 2>&1 && print true || print false)"
+  elif dsm_controlstrip_domain_exists; then
+    print -u2 "Cannot export the existing com.apple.controlstrip preferences; nothing was changed."
+    return 1
   else
     /usr/bin/defaults write "$metadata" controlstripSnapshotPresent -bool false
     /usr/bin/defaults write "$metadata" miniCustomizedPresent -bool false
@@ -110,6 +113,12 @@ dsm_ensure_backup() {
   /bin/mv "$temporary" "$DSM_STATE_DIR"
   DSM_PARTIAL_BACKUP=""
   print "Saved original state to: $DSM_STATE_DIR"
+}
+
+dsm_controlstrip_domain_exists() {
+  typeset -a domains
+  domains=(${(s:, :)"$(/usr/bin/defaults domains)"})
+  (( ${domains[(Ie)com.apple.controlstrip]} ))
 }
 
 dsm_write_bool() {
@@ -198,5 +207,18 @@ dsm_restore_touchbar_array() {
     dsm_write_array_from_lines "$key" "${items[@]}"
   else
     /usr/bin/defaults delete com.apple.controlstrip "$key" 2>/dev/null || true
+    if /usr/bin/defaults read com.apple.controlstrip "$key" >/dev/null 2>&1; then
+      print -u2 "Failed to verify removal of previously absent com.apple.controlstrip/$key."
+      return 1
+    fi
   fi
+}
+
+# Removes a com.apple.controlstrip domain that did not exist before the first
+# change, but only when no other keys have appeared in it since.
+dsm_remove_created_controlstrip_domain() {
+  local contents
+  contents=$(/usr/bin/defaults read com.apple.controlstrip 2>/dev/null) || return 0
+  [[ "${contents//[[:space:]]/}" == "{}" ]] || return 0
+  /usr/bin/defaults delete com.apple.controlstrip
 }

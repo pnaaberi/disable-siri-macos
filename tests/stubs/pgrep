@@ -1,0 +1,3 @@
+#!/bin/sh
+# Test double: report active Touch Bar services.
+exit 0

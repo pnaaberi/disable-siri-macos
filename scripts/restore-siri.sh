@@ -33,9 +33,12 @@ dsm_restore_bool com.apple.Siri LockscreenEnabled lockscreen
 dsm_restore_bool com.apple.Siri SiriPrefStashedStatusMenuVisible stashed_menu_visible
 dsm_restore_bool com.apple.Siri SuggestionsEnabled suggestions
 
-if [[ "$(/usr/bin/defaults read "$DSM_STATE_META" controlstripSnapshotPresent)" == "1" ]]; then
-  dsm_restore_touchbar_array MiniCustomized miniCustomizedPresent
-  dsm_restore_touchbar_array FullCustomized fullCustomizedPresent
+# Always restore both arrays: when the domain was originally absent, both are
+# recorded as absent and any arrays created by the Touch Bar change are removed.
+dsm_restore_touchbar_array MiniCustomized miniCustomizedPresent
+dsm_restore_touchbar_array FullCustomized fullCustomizedPresent
+if [[ "$(/usr/bin/defaults read "$DSM_STATE_META" controlstripSnapshotPresent)" != "1" ]]; then
+  dsm_remove_created_controlstrip_domain
 fi
 
 if [[ "$(/usr/bin/defaults read "$DSM_STATE_META" siriAgentWasDisabled)" == "1" ]]; then

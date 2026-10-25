@@ -1,0 +1,9 @@
+#!/bin/sh
+# Test double: tracks only whether com.apple.Siri.agent is disabled.
+state="$DSM_STUB_STORE/launchctl-disabled"
+case "$1" in
+  print-disabled) [ -f "$state" ] && printf '\t"com.apple.Siri.agent" => disabled\n'; exit 0 ;;
+  disable) : > "$state" ;;
+  enable) rm -f "$state" ;;
+  *) echo "Unsupported launchctl command $1" >&2; exit 1 ;;
+esac

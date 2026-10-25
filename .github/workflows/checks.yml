@@ -16,3 +16,5 @@ jobs:
         run: ./tests/test-cli.sh
       - name: Test state capture, restoration, and array filtering
         run: ./tests/test-state-helpers.sh
+      - name: Test Touch Bar backup, removal, and restore with stubbed macOS commands
+        run: ./tests/test-touchbar-restore.sh

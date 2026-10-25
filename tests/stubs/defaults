@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Test double for macOS defaults(1). Domains are JSON files; never touches real preferences."""
+import json
+import os
+import sys
+from pathlib import Path
+
+STORE = Path(os.environ['DSM_STUB_STORE'])
+
+
+def location(domain):
+    if domain.startswith('/'):
+        return Path(domain if domain.endswith('.plist') else domain + '.plist')
+    return STORE / f'{domain}.json'
+
+
+def load(domain):
+    path = location(domain)
+    return json.loads(path.read_text()) if path.is_file() else None
+
+
+def save(domain, data):
+    location(domain).parent.mkdir(parents=True, exist_ok=True)
+    location(domain).write_text(json.dumps(data))
+
+
+def show(value):
+    if isinstance(value, bool):
+        return '1' if value else '0'
+    if isinstance(value, list):
+        return '(\n' + ',\n'.join(f'    {item}' for item in value) + '\n)'
+    if isinstance(value, dict):
+        return '{\n' + ''.join(f'    {key} = {show(item)};\n' for key, item in value.items()) + '}'
+    return str(value)
+
+
+def fail(message):
+    print(message, file=sys.stderr)
+    sys.exit(1)
+
+
+command, args = sys.argv[1], sys.argv[2:]
+if command == 'domains':
+    print(', '.join(sorted(path.stem for path in STORE.glob('*.json'))))
+elif command == 'read':
+    data = load(args[0])
+    if data is None:
+        fail(f'Domain {args[0]} does not exist')
+    if len(args) == 1:
+        print(show(data))
+    elif args[1] in data:
+        print(show(data[args[1]]))
+    else:
+        fail(f'The domain/default pair of ({args[0]}, {args[1]}) does not exist')
+elif command == 'write':
+    domain, key, kind, values = args[0], args[1], args[2], args[3:]
+    data = load(domain) or {}
+    if kind == '-bool':
+        data[key] = values[0].lower() in ('true', 'yes', '1')
+    elif kind == '-int':
+        data[key] = int(values[0])
+    elif kind == '-string':
+        data[key] = values[0]
+    elif kind == '-array':
+        data[key] = list(values)
+    else:
+        fail(f'Unsupported write type {kind}')
+    save(domain, data)
+elif command == 'delete':
+    data = load(args[0])
+    if data is None:
+        fail(f'Domain {args[0]} not found')
+    if len(args) == 1:
+        location(args[0]).unlink()
+    elif args[1] in data:
+        del data[args[1]]
+        save(args[0], data)
+    else:
+        fail(f'Key {args[1]} not found in domain {args[0]}')
+elif command == 'export':
+    data = load(args[0])
+    if data is None or args[0] in os.environ.get('DSM_STUB_EXPORT_FAIL', '').split(','):
+        fail(f'Could not export domain {args[0]}')
+    Path(args[1]).write_text(json.dumps(data))
+else:
+    fail(f'Unsupported defaults command {command}')
